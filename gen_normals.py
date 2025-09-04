@@ -9,7 +9,7 @@ from graspnetAPI import GraspNet
 from tqdm import tqdm
 import argparse
 
-from rgbd_graspnet.constant import GRASPNET_ROOT, NORMALS_DIR
+from rgb_matters.constant import GRASPNET_ROOT, NORMALS_DIR
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

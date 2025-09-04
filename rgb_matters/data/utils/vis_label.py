@@ -29,6 +29,13 @@ X_STEP = X_LENGTH / NUM_GRID_X
 Y_STEP = Y_LENGTH / NUM_GRID_Y
 
 
+view_params = {
+    "front": [0.0, 0.0, -1.0],   # direction camera is looking
+    "lookat": [0.0, 0.0, 0.5],   # point camera is looking at
+    "up": [0.0, -1.0, 0.0],      # camera's up direction
+    "zoom": 0.5              # camera zoom - ADJUST THIS larger values zoom in, smaller values zoom out
+}
+
 class CameraInfo:
     def __init__(self, width, height, fx, fy, cx, cy, scale):
         self.width = width
@@ -189,6 +196,98 @@ def plot_gripper_pro_max(center, R, width, depth, score=1):
     return gripper
 
 
+
+def vis_grasp_view_angle(
+    view_mask: list[int],
+    angle_mask: list[int],
+    label,
+    scene_id,
+    camera,
+    ann_id,
+    graspnet_root,
+    dump_path=None,
+    dump=False,
+    show=True,
+    other_geometries=[], # add option to display other geometries like the object models, makes it much easier to visualize
+):
+    """
+    **Input:**
+
+    - label: numpy array of shape = (NUM_VIEWS * NUM_ANGLES, NUM_GRID_Y, NUM_GRID_X)
+
+    - scene_id: int of the scene id.
+
+    - camera: string of the type of camera, 'realsense' or 'kinect'
+
+    - ann_id: int of the annotation id.
+
+    - dump_path: string of the path to store the image.
+
+    - dump: bool of whether to store the image.
+
+    - show: bool of whether to show the grasp in window.
+
+    **Output:**
+
+    No output but store or(and) show the rendered image.
+    """
+    if (dump_path is None) and (dump):
+        raise ValueError("You need to specify the dump path to store the image.")
+    graspnet = GraspNet(root=graspnet_root, camera=camera, split="all")
+    _, depth_path, _, _, _, _, _ = graspnet.loadData(scene_id, camera, ann_id)
+    depths = cv2.imread(depth_path, cv2.IMREAD_UNCHANGED).astype(np.float32)
+    grasp_geometry = []
+    scene_pcd = generate_scene_pointcloud(
+        graspnet_root, "scene_%04d" % (scene_id,), ann_id, camera
+    )
+    cnt = 0
+
+    for grid_x in range(NUM_GRID_X):
+        for grid_y in range(NUM_GRID_Y):
+            label_grid = label[:, grid_y, grid_x]
+            view_angle_index = np.where(label_grid > 0.3)[0]
+            view_index_angle_index = decode_view_angle_index(view_angle_index)
+
+            for view_index, angle_index in view_index_angle_index:
+                if view_index in view_mask and angle_index in angle_mask:
+                    t, R, width, score = decode_grasp(
+                        grid_x=grid_x,
+                        grid_y=grid_y,
+                        label=label,
+                        view_index=view_index,
+                        angle_index=angle_index,
+                        depths=depths,
+                        camera=camera,
+                    )
+                    # The unit for plot_gripper_pro_max is meter rather than millimeter
+
+                    cnt += 1
+                    grasp_geometry.append(
+                        plot_gripper_pro_max(
+                            center=t / 1000,
+                            R=R,
+                            width=width / 1000,
+                            depth=0.015,
+                            score=score,
+                        )
+                    )
+                    if cnt == 1000: # prevent showing to many grasps, and crashing o3d
+                        print("Too many grasps, stopping")
+                        break
+             
+    print("Total Grasp:{}".format(cnt))
+
+    if show:
+        o3d.visualization.draw_geometries(
+            [*grasp_geometry, scene_pcd, *other_geometries],
+            width=1280,
+            height=720,
+            lookat=view_params["lookat"],
+            up=view_params["up"],
+            front=view_params["front"],
+            zoom=view_params["zoom"])
+
+
 def vis_grasp(
     label,
     scene_id,
@@ -199,6 +298,7 @@ def vis_grasp(
     dump=False,
     show=True,
     num_grasp=100,
+    other_geometries=[], # add option to display other geometries like the object models, makes it much easier to visualize
 ):
     """
     **Input:**
@@ -262,15 +362,20 @@ def vis_grasp(
                             score=score,
                         )
                     )
-                    if cnt == 1000:
-                        if show:
-                            o3d.visualization.draw_geometries(
-                                [*grasp_geometry, scene_pcd]
-                            )
+                    if cnt == 1000: # prevent showing to many grasps, and crashing o3d
+                        break
+             
     print("Total Grasp:{}".format(cnt))
 
     if show:
-        o3d.visualization.draw_geometries([*grasp_geometry, scene_pcd])
+        o3d.visualization.draw_geometries(
+            [*grasp_geometry, scene_pcd, *other_geometries],
+            width=1280,
+            height=720,
+            lookat=view_params["lookat"],
+            up=view_params["up"],
+            front=view_params["front"],
+            zoom=view_params["zoom"])
 
 
 def decode_grasp(grid_x, grid_y, label, view_index, angle_index, depths, camera):
@@ -308,7 +413,9 @@ def decode_grasp(grid_x, grid_y, label, view_index, angle_index, depths, camera)
     angle = angles[round(angle_index)]
     toward = -view
     R = viewpoint_params_to_matrix(toward, angle)
-    z = get_z(depths, grid_x, grid_y, 1)
+    z = get_z(depths, grid_x, grid_y, 1) 
+    z = depths[pixel_y, pixel_x] # use a simpler method to get the z
+
     x, y, z = framexy_depth_2_xyz(
         pixel_x=pixel_x, pixel_y=pixel_y, depth=z, camera=camera
     )

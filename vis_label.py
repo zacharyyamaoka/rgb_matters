@@ -3,9 +3,9 @@ __version__ = "1.0"
 
 import argparse
 
-from rgbd_graspnet.data.utils.label_loader import LabelLoader
-from rgbd_graspnet.data.utils.vis_label import vis_grasp
-from rgbd_graspnet.constant import GRASPNET_ROOT, LABEL_DIR
+from rgb_matters.data.utils.label_loader import LabelLoader
+from rgb_matters.data.utils.vis_label import vis_grasp
+from rgb_matters.constant import GRASPNET_ROOT, LABEL_DIR
 
 
 def str2bool(v):

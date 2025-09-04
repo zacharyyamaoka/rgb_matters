@@ -36,7 +36,7 @@ from .collision import (
     ModelFreeCollisionDetectorGPU,
     load_cloud,
 )
-from rgbd_graspnet.constant import GRASPNET_ROOT
+from rgb_matters.constant import GRASPNET_ROOT
 
 X_STEP = X_LENGTH / NUM_GRID_X
 Y_STEP = Y_LENGTH / NUM_GRID_Y

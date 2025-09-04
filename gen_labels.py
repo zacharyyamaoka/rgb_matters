@@ -2,10 +2,10 @@ __author__ = "Minghao Gou"
 __version__ = "1.0"
 
 import argparse
-from rgbd_graspnet.data.utils.gen_label import (
+from rgb_matters.data.utils.gen_label import (
     gen_scene_label,
 )
-from rgbd_graspnet.constant import GRASPNET_ROOT, LABEL_DIR
+from rgb_matters.constant import GRASPNET_ROOT, LABEL_DIR
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

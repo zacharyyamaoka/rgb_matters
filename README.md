@@ -1,4 +1,4 @@
-# rgbd_graspnet
+# rgb_matters
 [![](https://graspnet.net/images/graspnetlogo1-blue.png)](https://graspnet.net/index.html)
 Implementation for ICRA 2021 paper [RGB Matters: Learning 7-DoF Grasp Poses on Monocular RGBD Images](https://arxiv.org/pdf/2103.02184).
 
@@ -17,7 +17,7 @@ python3 -m pip install -r requirements.txt
 Download and setup following the [official website](https://graspnet.net/datasets.html).
 
 ## Generate label
-1. Modify the values in [constant.py](rgbd_graspnet/constant.py) to your own.
+1. Modify the values in [constant.py](rgb_matters/constant.py) to your own.
 2. Run `gen_labels.py`
 ```bash
 # Around 260G space is needed if all the labels are generated.
@@ -78,7 +78,7 @@ bash train.sh 1,2 rs_rs_no_norm  # training with rs_rs_no_norm.yaml config with 
 
 2. Create a directory named `weights` and put the downloaded files into it as below.
 ```
-rgbd_graspnet/
+rgb_matters/
 ├── check_label_integrity.py
 ├── train.py
 ├── train.sh

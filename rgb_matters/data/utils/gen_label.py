@@ -67,7 +67,7 @@ def get_grasp_label(
     scene_id,
     camera,
     ann_id,
-    graspnet,
+    graspnet: GraspNet,
     grasp_labels=None,
     collision_labels=None,
     grasp_thresh=0.1,
@@ -395,6 +395,7 @@ def parallel_gen_scene_label(graspnet_root, scene_ids, dump_folder, proc=1):
         p.join()
 
 
+# Gen scene only for one camera
 def parallel_gen_camera_label(graspnet_root, scene_ids, camera, dump_folder, proc=1):
     if proc == 1:
         for scene_id in scene_ids:

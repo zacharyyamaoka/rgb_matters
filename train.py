@@ -9,11 +9,11 @@ from torch.utils.tensorboard import SummaryWriter
 import torch.distributed as dist
 from torch.nn.utils import clip_grad_norm_
 
-from rgbd_graspnet.data import GraspNetDataset
-from rgbd_graspnet.net.acc import Acc_v2
-from rgbd_graspnet.net.rgb_normal_net import RGBNormalNet
-from rgbd_graspnet.constant import GRASPNET_ROOT, LABEL_DIR
-from rgbd_graspnet.net.eval import eval_once
+from rgb_matters.data import GraspNetDataset
+from rgb_matters.net.acc import Acc_v2
+from rgb_matters.net.rgb_normal_net import RGBNormalNet
+from rgb_matters.constant import GRASPNET_ROOT, LABEL_DIR
+from rgb_matters.net.eval import eval_once
 
 import time
 import argparse
@@ -219,7 +219,7 @@ cal_accuracy_0_5 = cal_accuracy_0_5.cuda()
 cal_accuracy_0_8 = Acc_v2(thresh=0.8)
 cal_accuracy_0_8 = cal_accuracy_0_8.cuda()
 
-# criterion = RGBD_Graspnet_Loss(
+# criterion = rgb_matters_Loss(
 criterion = nn.MSELoss()
 criterion = criterion.cuda()
 

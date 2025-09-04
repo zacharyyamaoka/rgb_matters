@@ -8,12 +8,12 @@ import torch
 import time
 import matplotlib.pyplot as plt
 
-from rgbd_graspnet.data.utils.collision import load_cloud
+from rgb_matters.data.utils.collision import load_cloud
 
-from rgbd_graspnet.data import GraspNetDataset
-from rgbd_graspnet.net.rgb_normal_net import RGBNormalNet
-from rgbd_graspnet.data.utils.convert import convert_grasp, get_workspace_mask
-from rgbd_graspnet.constant import GRASPNET_ROOT, LABEL_DIR
+from rgb_matters.data import GraspNetDataset
+from rgb_matters.net.rgb_normal_net import RGBNormalNet
+from rgb_matters.data.utils.convert import convert_grasp, get_workspace_mask
+from rgb_matters.constant import GRASPNET_ROOT, LABEL_DIR
 
 
 def str2bool(v):

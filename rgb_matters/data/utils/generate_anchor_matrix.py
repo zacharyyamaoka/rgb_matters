@@ -151,7 +151,7 @@ if __name__ == "__main__":
     Rs = Rs.reshape((-1, 3, 3))
     np.random.shuffle(Rs)
     # Rs = Rs[0:20]
-    from vis import plot_gripper_pro_max
+    from rgb_matters.data.utils.vis_label import plot_gripper_pro_max
 
     geometry = []
     pcd = o3d.geometry.PointCloud()

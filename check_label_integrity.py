@@ -5,14 +5,14 @@ from tqdm import tqdm
 import os
 import argparse
 
-from rgbd_graspnet.constant import LABEL_DIR
-from rgbd_graspnet.data.utils.gen_label import get_label_path
+from rgb_matters.constant import LABEL_DIR
+from rgb_matters.data.utils.gen_label import get_label_path
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--camera",
-        default="realsense",
+        default="both",
         choices=["realsense", "kinect", "both"],
         help="which camera(s) to check",
     )

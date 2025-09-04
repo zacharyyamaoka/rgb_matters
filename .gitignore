@@ -9,3 +9,4 @@ events.out.*
 *.json
 /vis
 /weights
+/gen_data
