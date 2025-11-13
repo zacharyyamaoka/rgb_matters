@@ -33,7 +33,7 @@ class GraspNetDataset(Dataset):
         """
         Graspnet Dataset.
 
-        Args:
+        DescriptionArgs:
             graspnet_root(str): string of graspnet root path.
             label_root(str): labels dir.
             normals_dir(str): normal dir.
@@ -88,7 +88,7 @@ class GraspNetDataset(Dataset):
 
     def __getitem__(self, *args):
         """
-        Args:
+        DescriptionArgs:
             index(int): int of index or tuple of (scene_id, camera, ann_id)
 
         Returns:

@@ -33,7 +33,7 @@ def ipbasic_inpaint(
     """Slower, multi-scale dilation version with additional noise removal that
     provides better qualitative results.
 
-    Args:
+    DescriptionArgs:
         depth_map: projected depths
         extrapolate:whether to extrapolate by extending depths to top of
             the frame, and applying a 31x31 full kernel dilation
